@@ -995,7 +995,9 @@ check_required(Value, [_ | _] = Required, State) ->
                      ),
     case IsValid of
       true  -> State;
-      false -> handle_data_invalid(?missing_required_property, Value, State)
+      false ->
+        file:write_file("/tmp/jss", io_lib:format("~p\n~p",[Value,State])),
+        handle_data_invalid(?missing_required_property, Value, State)
     end;
 check_required(_Value, _InvalidRequired, State) ->
     handle_schema_invalid(?wrong_required_array, State).
