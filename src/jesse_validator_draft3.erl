@@ -901,7 +901,9 @@ check_extends_array(Value, Extends, State) ->
 resolve_ref(Value, Reference, State) ->
   NewState = jesse_state:resolve_ref(State, Reference),
   Schema = get_current_schema(NewState),
-  jesse_schema_validator:validate_with_state(Schema, Value, NewState).
+  ResultState = jesse_schema_validator:validate_with_state(Schema, Value, NewState),
+  ErrorList = jesse_state:get_error_list(State) ++ jesse_state:get_error_list(ResultState),
+  jesse_state:set_error_list(State, ErrorList).
 
 undo_resolve_ref(State, OriginalState) ->
   jesse_state:undo_resolve_ref(State, OriginalState).
